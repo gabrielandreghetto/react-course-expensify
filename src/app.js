@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch, Link, NavLink } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Link, NavLink, Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from "history";
 
@@ -20,11 +20,11 @@ const history = createBrowserHistory();
 const store = configureStore();
 
 const jsx = (
-    <Router history={history}>
+    // <Router history={history}>
         <Provider store={store}>
             <AppRouter />
         </Provider>
-    </Router>
+    // </Router>
 )
 
 ReactDOM.render(jsx , document.getElementById('app'));
