@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Switch, Link, NavLink, Router } from 'react-route
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from "history";
 
+import './firebase/firebase';
+
 import configureStore from './store/configureStore';
 import AppRouter from './routers/AppRouter';
 
