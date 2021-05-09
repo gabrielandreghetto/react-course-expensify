@@ -8,6 +8,8 @@ import { login, logout } from './actions/auth';
 import { startSetExpenses } from './actions/expenses';
 import { firebase } from './firebase/firebase';
 
+import LoadingPage from './components/LoadingPage';
+
 import 'normalize.css/normalize.css'
 import 'react-dates/lib/css/_datepicker.css';
 import './styles/styles.scss'
@@ -28,7 +30,7 @@ const renderApp = () => {
     }
 };
 
-ReactDOM.render(<p>loading...</p> , document.getElementById('app'));
+ReactDOM.render(<LoadingPage /> , document.getElementById('app'));
 
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
