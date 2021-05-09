@@ -1,38 +1,50 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch, Link, NavLink, Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { createBrowserHistory } from "history";
-
-import './firebase/firebase';
 
 import configureStore from './store/configureStore';
-import AppRouter from './routers/AppRouter';
-
+import AppRouter, { history } from './routers/AppRouter';
+import { login, logout } from './actions/auth';
 import { startSetExpenses } from './actions/expenses';
-import { setTextFilter } from './actions/filters';
-import getVisibleExpenses from './selectors/expenses';
+import { firebase } from './firebase/firebase';
 
 import 'normalize.css/normalize.css'
-import './styles/styles.scss'
 import 'react-dates/lib/css/_datepicker.css';
-
-const history = createBrowserHistory();
+import './styles/styles.scss'
 
 const store = configureStore();
 
 const jsx = (
-    // <Router history={history}>
-        <Provider store={store}>
-            <AppRouter />
-        </Provider>
-    // </Router>
-)
+    <Provider store={store}>
+        <AppRouter />
+    </Provider>
+);
+
+let hasRendered = false;
+const renderApp = () => {
+    if (!hasRendered) {
+        ReactDOM.render(jsx , document.getElementById('app'));
+        hasRendered = true;
+    }
+};
 
 ReactDOM.render(<p>loading...</p> , document.getElementById('app'));
 
-store.dispatch(startSetExpenses())
-.then(() => {
-    ReactDOM.render(jsx , document.getElementById('app'));
-})
-.catch(err => console.log(err));
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        store.dispatch(login(user.uid));
+
+        store.dispatch(startSetExpenses())
+        .then(() => {
+            renderApp();
+            if(history.location.pathname === '/') {
+                history.push('/dashboard');
+            }
+        })
+        .catch(err => console.log(err));
+    } else {
+        store.dispatch(logout());
+        renderApp();
+        history.push('/');
+    }
+});
